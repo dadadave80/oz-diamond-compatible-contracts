@@ -27,7 +27,7 @@ contract Diamond {
         bytes4 selector = msg.sig;
         // Lookup facet for function selector
         address facet = LibDiamond.diamondStorage().selectorToFacetAndPosition[selector].facetAddress;
-        require(facet != address(0), FunctionDoesNotExist(selector));
+        if (facet == address(0)) revert FunctionDoesNotExist(selector);
 
         assembly {
             // Copy calldata to memory
