@@ -3,7 +3,7 @@ pragma solidity ^0.8.4;
 
 import {DiamondStorage, LibDiamond} from "@diamond/libraries/LibDiamond.sol";
 import {LibOwnableRoles} from "@diamond/libraries/LibOwnableRoles.sol";
-import {DiamondArgs, FacetCut, FacetCutAction} from "@diamond/libraries/types/DiamondTypes.sol";
+import {DiamondArgs, FacetCut} from "@diamond/libraries/types/DiamondTypes.sol";
 import {FunctionDoesNotExist} from "@diamond/libraries/errors/DiamondErrors.sol";
 
 /// @notice Implements EIP-2535 Diamond proxy pattern, allowing dynamic addition, replacement, and removal of facets
