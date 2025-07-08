@@ -86,7 +86,7 @@ library LibDiamond {
     function _diamondCut(FacetCut[] memory _facetCuts, address _init, bytes memory _calldata) internal {
         uint256 facetCutsLength = _facetCuts.length;
         if (facetCutsLength == 0) revert NoFacetsInDiamondCut();
-        for (uint256 facetIndex; facetIndex < facetCutsLength; facetIndex++) {
+        for (uint256 facetIndex; facetIndex < facetCutsLength;) {
             FacetCutAction action = _facetCuts[facetIndex].action;
             if (action == FacetCutAction.Add) {
                 _addFunctions(_facetCuts[facetIndex].facetAddress, _facetCuts[facetIndex].functionSelectors);
@@ -96,6 +96,9 @@ library LibDiamond {
                 _removeFunctions(_facetCuts[facetIndex].facetAddress, _facetCuts[facetIndex].functionSelectors);
             } else {
                 revert IncorrectFacetCutAction(uint8(action));
+            }
+            unchecked {
+                ++facetIndex;
             }
         }
         emit DiamondCut(_facetCuts, _init, _calldata);
