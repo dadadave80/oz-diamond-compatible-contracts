@@ -22,11 +22,8 @@ abstract contract DeployDiamondHelper is HelperContract {
         ERC165Init erc165Init = new ERC165Init();
 
         // Prepare DiamondArgs: owner and init data
-        DiamondArgs memory args = DiamondArgs({
-            owner: _owner,
-            init: address(erc165Init),
-            initData: abi.encodeWithSignature("initERC165()")
-        });
+        DiamondArgs memory args =
+            DiamondArgs({owner: _owner, init: address(erc165Init), initData: abi.encodeWithSignature("initERC165()")});
 
         // Create an array of FacetCut entries for standard facets
         FacetCut[] memory cut = new FacetCut[](3);
