@@ -1,7 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {FacetCut, FacetCutAction} from "@diamond/libraries/types/DiamondTypes.sol";
+import {
+    FacetCut,
+    FacetCutAction,
+    DiamondStorage,
+    DIAMOND_STORAGE_LOCATION
+} from "@diamond/libraries/types/DiamondTypes.sol";
 import {DiamondCut} from "@diamond/libraries/logs/DiamondLogs.sol";
 import {
     CannotAddFunctionToDiamondThatAlreadyExists,
@@ -18,39 +23,6 @@ import {
     RemoveFacetAddressMustBeZeroAddress
 } from "@diamond/libraries/errors/DiamondErrors.sol";
 
-//*//////////////////////////////////////////////////////////////////////////
-//                           DIAMOND STORAGE TYPES
-//////////////////////////////////////////////////////////////////////////*//
-
-/// @dev This struct is used to store the facet address and position of the
-///      function selector in the facetToSelectorsAndPosition.functionSelectors
-///      array.
-struct FacetAddressAndPosition {
-    address facetAddress;
-    uint96 functionSelectorPosition;
-}
-
-/// @dev This struct is used to store the function selectors and position of
-///      the facet address in the facetAddresses array.
-struct FacetFunctionSelectorsAndPosition {
-    bytes4[] functionSelectors;
-    uint256 facetAddressPosition;
-}
-
-/// @notice Storage structure for managing facets and interface support in a Diamond (EIP-2535) proxy
-/// @dev Tracks function selector mappings, facet lists, and ERC-165 interface support
-/// @custom:storage-location erc7201:diamond.standard.diamond.storage
-struct DiamondStorage {
-    /// @notice Maps each function selector to the facet address and selector’s position in that facet
-    mapping(bytes4 => FacetAddressAndPosition) selectorToFacetAndPosition;
-    /// @notice Maps each facet address to its function selectors and the facet’s position in the global list
-    mapping(address => FacetFunctionSelectorsAndPosition) facetToSelectorsAndPosition;
-    /// @notice Array of all facet addresses registered in the diamond
-    address[] facetAddresses;
-    /// @notice Tracks which interface IDs (ERC-165) are supported by the diamond
-    mapping(bytes4 => bool) supportedInterfaces;
-}
-
 /// @notice Internal library providing core functionality for EIP-2535 Diamond proxy management.
 /// @author David Dada
 /// @author Modified from Nick Mudge (https://github.com/mudgen/diamond-3-hardhat/blob/main/contracts/libraries/LibDiamond.sol)
@@ -61,10 +33,6 @@ library LibDiamond {
     //*//////////////////////////////////////////////////////////////////////////
     //                              DIAMOND STORAGE
     //////////////////////////////////////////////////////////////////////////*//
-
-    // keccak256(abi.encode(uint256(keccak256("diamond.standard.diamond.storage")) - 1)) & ~bytes32(uint256(0xff));
-    bytes32 private constant DIAMOND_STORAGE_LOCATION =
-        0x44fefae66705534388ac21ba5f0775616856a675b8eaea9bb0b2507f06238700;
 
     /// @dev Get the diamond storage.
     function diamondStorage() internal pure returns (DiamondStorage storage ds) {
