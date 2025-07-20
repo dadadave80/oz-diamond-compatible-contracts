@@ -5,8 +5,8 @@ import {Diamond} from "@diamond/Diamond.sol";
 import {DiamondArgs, FacetCut} from "@diamond/libraries/types/DiamondTypes.sol";
 
 /// @notice Implements EIP-2535 Diamond proxy pattern, allowing dynamic addition, replacement, and removal of facets
-/// @author Your name / protocol
-/// NOTE: Replace `MyShinyDiamond` with the name of your protocol
+/// @author Your name or protocol
+/// NOTE: Replace `MyShinyDiamond` with your name or protocol
 contract MyShinyDiamond is Diamond {
     /// @notice Initializes the Diamond proxy with the provided facets and initialization parameters
     /// @param _diamondCut Array of FacetCut structs defining facet addresses, corresponding function selectors, and actions (Add, Replace, Remove)
