@@ -21,11 +21,8 @@ contract DeployDiamond is Script, DeployDiamondHelper {
     /// @dev Broadcasts transactions using Foundry's scripting environment (`vm.startBroadcast()` and `vm.stopBroadcast()`).
     ///      Deploys three core facets, sets up DiamondArgs, encodes an initializer call, and constructs the Diamond.
     /// @return diamond_ The address of the deployed Diamond proxy contract
-    function run() external returns (Diamond diamond_) {
-        vm.startBroadcast();
-
+    function run() external returns (address diamond_) {
+        vm.broadcast();
         diamond_ = _deployDiamond(msg.sender);
-
-        vm.stopBroadcast();
     }
 }
