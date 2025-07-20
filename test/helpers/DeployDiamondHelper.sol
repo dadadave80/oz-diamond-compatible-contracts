@@ -10,9 +10,7 @@ import {FacetCutAction, FacetCut, DiamondArgs} from "@diamond/libraries/types/Di
 import {HelperContract} from "@diamond-test/helpers/HelperContract.sol";
 
 abstract contract DeployDiamondHelper is HelperContract {
-    address public diamondOwner = makeAddr("Owner");
-
-    function _deployDiamond(address _owner) internal returns (Diamond diamond_) {
+    function _deployDiamond(address _owner) internal returns (address diamond_) {
         // Deploy core facet contracts
         DiamondCutFacet diamondCutFacet = new DiamondCutFacet();
         DiamondLoupeFacet diamondLoupeFacet = new DiamondLoupeFacet();
@@ -50,6 +48,7 @@ abstract contract DeployDiamondHelper is HelperContract {
         });
 
         // Deploy the Diamond contract with the facets and initialization args
-        diamond_ = new Diamond(cut, args);
+        Diamond diamond = new Diamond(cut, args);
+        diamond_ = address(diamond);
     }
 }
