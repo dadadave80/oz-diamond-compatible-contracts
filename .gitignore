@@ -14,3 +14,6 @@ docs/
 # IDE files
 .vscode/
 .wake/
+
+# Foundry gas snapshots
+.gas-snapshot
