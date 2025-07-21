@@ -15,7 +15,7 @@ contract DiamondLoupeFacet is IDiamondLoupe {
     /// @notice Gets all facet addresses and their function selectors.
     /// @return facets_ Facet
     function facets() external view returns (Facet[] memory facets_) {
-        DiamondStorage storage ds = LibDiamond.diamondStorage();
+        DiamondStorage storage ds = LibDiamond._diamondStorage();
         uint256 facetCount = ds.facetAddresses.length;
         facets_ = new Facet[](facetCount);
         for (uint256 i; i < facetCount;) {
@@ -37,13 +37,13 @@ contract DiamondLoupeFacet is IDiamondLoupe {
         override
         returns (bytes4[] memory facetFunctionSelectors_)
     {
-        facetFunctionSelectors_ = LibDiamond.diamondStorage().facetToSelectorsAndPosition[_facet].functionSelectors;
+        facetFunctionSelectors_ = LibDiamond._diamondStorage().facetToSelectorsAndPosition[_facet].functionSelectors;
     }
 
     /// @notice Get all the facet addresses used by a diamond.
     /// @return facetAddresses_
     function facetAddresses() external view override returns (address[] memory facetAddresses_) {
-        facetAddresses_ = LibDiamond.diamondStorage().facetAddresses;
+        facetAddresses_ = LibDiamond._diamondStorage().facetAddresses;
     }
 
     /// @notice Gets the facet that supports the given selector.
@@ -51,7 +51,7 @@ contract DiamondLoupeFacet is IDiamondLoupe {
     /// @param _functionSelector The function selector.
     /// @return facetAddress_ The facet address.
     function facetAddress(bytes4 _functionSelector) external view override returns (address facetAddress_) {
-        facetAddress_ = LibDiamond.diamondStorage().selectorToFacetAndPosition[_functionSelector].facetAddress;
+        facetAddress_ = LibDiamond._diamondStorage().selectorToFacetAndPosition[_functionSelector].facetAddress;
     }
 
     /// @notice Query if a contract implements an interface
@@ -61,6 +61,6 @@ contract DiamondLoupeFacet is IDiamondLoupe {
     /// @return `true` if the contract implements `interfaceID` and
     ///  `interfaceID` is not 0xffffffff, `false` otherwise
     function supportsInterface(bytes4 _interfaceId) external view returns (bool) {
-        return LibDiamond.diamondStorage().supportedInterfaces[_interfaceId];
+        return LibDiamond._diamondStorage().supportedInterfaces[_interfaceId];
     }
 }
