@@ -18,14 +18,14 @@ A modular, upgradeable smart contract framework built using the [EIP-2535 Diamon
 
 ## 🛠️ Project Structure
 
-```bash
+```sh
 .
 ├── src/
 │   ├── Diamond.sol                 # Diamond core contract
-│   ├── facets/                    # All facets (logic modules)
-│   ├── initializer/               # Initializer for setting up ERC165 and others
-│   ├── interfaces/                # Diamond-compliant interfaces (e.g. IDiamondCut)
-│   ├── libraries/                 # DiamondStorage, LibDiamond, etc.
+│   ├── facets/                     # All facets (logic modules)
+│   ├── initializer/                # Initializer for setting up ERC165 and others
+│   ├── interfaces/                 # Diamond-compliant interfaces (e.g. IDiamondCut)
+│   ├── libraries/                  # DiamondStorage, LibDiamond, etc.
 │   └── scripts/DeployDiamond.s.sol # Foundry deployment script
 │
 ├── test/
@@ -37,27 +37,29 @@ A modular, upgradeable smart contract framework built using the [EIP-2535 Diamon
 
 ## 🚀 Getting Started
 
-1. Install Dependencies
+1. Forge install this repo
 
-```bash
-forge install
+```sh
+forge install DADADAVE80/diamond-template
 ```
 
-2. Compile
-
-```bash
-forge build
+2. Import the Diamond contract and facets into your project
+```solidity
+import {Diamond} from "@diamond/Diamond.sol";
+import {DiamondCutFacet} from "@diamond/facets/DiamondCutFacet.sol";
+import {DiamondLoupeFacet} from "@diamond/facets/DiamondLoupeFacet.sol";
+import {OwnableRolesFacet} from "@diamond/facets/OwnableRolesFacet.sol";
 ```
 
 3. Run Tests
 
-```bash
+```sh
 forge test --ffi -vvv
 ```
 
 4. Deploy Locally
 
-```bash
+```sh
 forge script script/DeployDiamond.s.sol --fork-url <RPC_URL> --broadcast
 ```
 
