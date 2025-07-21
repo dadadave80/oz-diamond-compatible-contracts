@@ -26,7 +26,7 @@ contract Diamond {
     fallback() external payable {
         bytes4 selector = msg.sig;
         // Lookup facet for function selector
-        address facet = LibDiamond.diamondStorage().selectorToFacetAndPosition[selector].facetAddress;
+        address facet = LibDiamond._diamondStorage().selectorToFacetAndPosition[selector].facetAddress;
         if (facet == address(0)) revert FunctionDoesNotExist(selector);
 
         assembly {

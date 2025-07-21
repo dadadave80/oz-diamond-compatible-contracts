@@ -35,10 +35,10 @@ library LibDiamond {
     //////////////////////////////////////////////////////////////////////////*//
 
     /// @dev Get the diamond storage.
-    function diamondStorage() internal pure returns (DiamondStorage storage ds) {
+    function _diamondStorage() internal pure returns (DiamondStorage storage ds_) {
         bytes32 position = DIAMOND_STORAGE_LOCATION;
         assembly {
-            ds.slot := position
+            ds_.slot := position
         }
     }
 
@@ -80,7 +80,7 @@ library LibDiamond {
         uint256 functionSelectorsLength = _functionSelectors.length;
         if (functionSelectorsLength == 0) revert NoSelectorsGivenToAdd();
         if (_facetAddress == address(0)) revert CannotAddSelectorsToZeroAddress(_functionSelectors);
-        DiamondStorage storage ds = diamondStorage();
+        DiamondStorage storage ds = _diamondStorage();
         uint96 selectorPosition = uint96(ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.length);
         // Add new facet address if it does not exist
         if (selectorPosition == 0) {
@@ -105,7 +105,7 @@ library LibDiamond {
         uint256 functionSelectorsLength = _functionSelectors.length;
         if (functionSelectorsLength == 0) revert NoSelectorsGivenToAdd();
         if (_facetAddress == address(0)) revert CannotAddSelectorsToZeroAddress(_functionSelectors);
-        DiamondStorage storage ds = diamondStorage();
+        DiamondStorage storage ds = _diamondStorage();
         uint96 selectorPosition = uint96(ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.length);
         // add new facet address if it does not exist
         if (selectorPosition == 0) {
@@ -133,7 +133,7 @@ library LibDiamond {
         uint256 functionSelectorsLength = _functionSelectors.length;
         if (_facetAddress != address(0)) revert RemoveFacetAddressMustBeZeroAddress(_facetAddress);
         if (functionSelectorsLength == 0) revert NoSelectorsProvidedForFacetForCut(_facetAddress);
-        DiamondStorage storage ds = diamondStorage();
+        DiamondStorage storage ds = _diamondStorage();
         for (uint256 selectorIndex; selectorIndex < functionSelectorsLength;) {
             bytes4 selector = _functionSelectors[selectorIndex];
             address oldFacetAddress = ds.selectorToFacetAndPosition[selector].facetAddress;
@@ -145,60 +145,60 @@ library LibDiamond {
     }
 
     /// @dev Add a facet address to the diamond.
-    /// @param ds Diamond storage.
+    /// @param _ds Diamond storage.
     /// @param _facetAddress The address of the facet to add.
-    function _addFacet(DiamondStorage storage ds, address _facetAddress) internal {
+    function _addFacet(DiamondStorage storage _ds, address _facetAddress) internal {
         _enforceHasContractCode(_facetAddress);
-        ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition = ds.facetAddresses.length;
-        ds.facetAddresses.push(_facetAddress);
+        _ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition = _ds.facetAddresses.length;
+        _ds.facetAddresses.push(_facetAddress);
     }
 
     /// @dev Add a function to the diamond.
-    /// @param ds Diamond storage.
+    /// @param _ds Diamond storage.
     /// @param _selector The function selector to add.
     /// @param _selectorPosition The position of the function selector in the facetToSelectorsAndPosition.functionSelectors array.
     /// @param _facetAddress The address of the facet to add the function selector to.
-    function _addFunction(DiamondStorage storage ds, bytes4 _selector, uint96 _selectorPosition, address _facetAddress)
+    function _addFunction(DiamondStorage storage _ds, bytes4 _selector, uint96 _selectorPosition, address _facetAddress)
         internal
     {
-        ds.selectorToFacetAndPosition[_selector].functionSelectorPosition = _selectorPosition;
-        ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.push(_selector);
-        ds.selectorToFacetAndPosition[_selector].facetAddress = _facetAddress;
+        _ds.selectorToFacetAndPosition[_selector].functionSelectorPosition = _selectorPosition;
+        _ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.push(_selector);
+        _ds.selectorToFacetAndPosition[_selector].facetAddress = _facetAddress;
     }
 
     /// @dev Remove a function from the diamond.
-    /// @param ds Diamond storage.
+    /// @param _ds Diamond storage.
     /// @param _facetAddress The address of the facet to remove the function from.
     /// @param _selector The function selector to remove.
-    function _removeFunction(DiamondStorage storage ds, address _facetAddress, bytes4 _selector) internal {
+    function _removeFunction(DiamondStorage storage _ds, address _facetAddress, bytes4 _selector) internal {
         if (_facetAddress == address(0)) revert CannotRemoveFunctionThatDoesNotExist(_selector);
         // an immutable function is a function defined directly in a diamond
         if (_facetAddress == address(this)) revert CannotRemoveImmutableFunction(_selector);
         // replace selector with last selector, then delete last selector
-        uint256 selectorPosition = ds.selectorToFacetAndPosition[_selector].functionSelectorPosition;
-        uint256 lastSelectorPosition = ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.length - 1;
+        uint256 selectorPosition = _ds.selectorToFacetAndPosition[_selector].functionSelectorPosition;
+        uint256 lastSelectorPosition = _ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.length - 1;
         // if not the same then replace _selector with lastSelector
         if (selectorPosition != lastSelectorPosition) {
-            bytes4 lastSelector = ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors[lastSelectorPosition];
-            ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors[selectorPosition] = lastSelector;
-            ds.selectorToFacetAndPosition[lastSelector].functionSelectorPosition = uint96(selectorPosition);
+            bytes4 lastSelector = _ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors[lastSelectorPosition];
+            _ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors[selectorPosition] = lastSelector;
+            _ds.selectorToFacetAndPosition[lastSelector].functionSelectorPosition = uint96(selectorPosition);
         }
         // delete the last selector
-        ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.pop();
-        delete ds.selectorToFacetAndPosition[_selector];
+        _ds.facetToSelectorsAndPosition[_facetAddress].functionSelectors.pop();
+        delete _ds.selectorToFacetAndPosition[_selector];
 
         // if no more selectors for facet address then delete the facet address
         if (lastSelectorPosition == 0) {
             // replace facet address with last facet address and delete last facet address
-            uint256 lastFacetAddressPosition = ds.facetAddresses.length - 1;
-            uint256 facetAddressPosition = ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition;
+            uint256 lastFacetAddressPosition = _ds.facetAddresses.length - 1;
+            uint256 facetAddressPosition = _ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition;
             if (facetAddressPosition != lastFacetAddressPosition) {
-                address lastFacetAddress = ds.facetAddresses[lastFacetAddressPosition];
-                ds.facetAddresses[facetAddressPosition] = lastFacetAddress;
-                ds.facetToSelectorsAndPosition[lastFacetAddress].facetAddressPosition = facetAddressPosition;
+                address lastFacetAddress = _ds.facetAddresses[lastFacetAddressPosition];
+                _ds.facetAddresses[facetAddressPosition] = lastFacetAddress;
+                _ds.facetToSelectorsAndPosition[lastFacetAddress].facetAddressPosition = facetAddressPosition;
             }
-            ds.facetAddresses.pop();
-            delete ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition;
+            _ds.facetAddresses.pop();
+            delete _ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition;
         }
     }
 
