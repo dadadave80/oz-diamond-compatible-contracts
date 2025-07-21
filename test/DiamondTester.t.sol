@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {Test, console} from "forge-std/Test.sol";
-import {IDiamondLoupe} from "@diamond/interfaces/IDiamondLoupe.sol";
+import {Test} from "forge-std/Test.sol";
 import {Facet} from "@diamond/libraries/types/DiamondTypes.sol";
 import {DeployedDiamondState} from "./helpers/TestStates.sol";
 
@@ -13,6 +12,11 @@ contract DiamondTester is DeployedDiamondState {
     /// @notice Verifies that the diamond contract is successfully deployed.
     function testDiamondDeployed() public view {
         assertNotEq(address(diamond), address(0));
+    }
+
+    /// @notice Verifies the diamond owner is set correctly.
+    function testDiamondOwner() public view {
+        assertEq(ownableRoles.owner(), diamondOwner);
     }
 
     /// @notice Checks that the standard facets are deployed and have valid addresses.
@@ -68,32 +72,22 @@ contract DiamondTester is DeployedDiamondState {
     }
 
     /// @notice Confirms ERC165 interface support.
-    function testSupportsERC165() public {
-        bytes4 interfaceId = 0x01ffc9a7; // ERC165 interface ID
-        (bool supported,) = address(diamond).call(abi.encodeWithSelector(interfaceId, interfaceId));
-        assertTrue(supported);
+    function testSupportsERC165() public view {
+        assertTrue(diamondLoupe.supportsInterface(0x01ffc9a7)); // ERC165 interface ID
     }
 
     /// @notice Confirms ERC173 interface support.
-    function testSupportsERC173() public {
-        bytes4 interfaceId = 0x7f5828d0; // ERC173 interface ID
-        (bool supported,) = address(diamond).call(abi.encodeWithSelector(0x01ffc9a7, interfaceId));
-        assertTrue(supported);
+    function testSupportsERC173() public view {
+        assertTrue(diamondLoupe.supportsInterface(0x7f5828d0)); // ERC173 interface ID
     }
 
     /// @notice Confirms IDiamondCut interface support.
-    function testSupportsIDiamondCut() public {
-        bytes4 interfaceId = 0x1f931c1c; // IDiamondCut interface ID
-        (bool supported,) = address(diamond).call(abi.encodeWithSelector(0x01ffc9a7, interfaceId));
-
-        assertTrue(supported);
+    function testSupportsIDiamondCut() public view {
+        assertTrue(diamondLoupe.supportsInterface(0x1f931c1c)); // IDiamondCut interface ID
     }
 
     /// @notice Confirms IDiamondLoupe interface support.
-    function testSupportsIDiamondLoupe() public {
-        bytes4 interfaceId = 0x48e2b093; // IDiamondLoupe interface ID
-        (bool supported,) = address(diamond).call(abi.encodeWithSelector(0x01ffc9a7, interfaceId));
-
-        assertTrue(supported);
+    function testSupportsIDiamondLoupe() public view {
+        assertTrue(diamondLoupe.supportsInterface(0x48e2b093)); // IDiamondLoupe interface ID
     }
 }
