@@ -75,6 +75,7 @@ forge script script/DeployDiamond.s.sol --fork-url <RPC_URL> --broadcast
 
 - [EIP-2535 Diamond Standard](https://eips.ethereum.org/EIPS/eip-2535)
 - [Nick Mudge’s Awesome Diamonds](https://github.com/mudgen/awesome-diamonds)
+- [David Dada’s ERC2535 Diamond Example](https://github.com/DADADAVE80/erc2535-diamond-example)
 
 ---
 
