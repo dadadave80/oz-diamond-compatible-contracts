@@ -148,6 +148,23 @@ library LibDiamond {
         }
     }
 
+    function _replaceFunctionsEnumerable(address _facetAddress, bytes4[] memory _functionSelectors) internal {
+        uint256 functionSelectorsLength = _functionSelectors.length;
+        if (functionSelectorsLength == 0) revert NoSelectorsGivenToAdd();
+        if (_facetAddress == address(0)) revert CannotAddSelectorsToZeroAddress(_functionSelectors);
+        DiamondStorage storage ds = _diamondStorage();
+        // Add new facet address if it does not exist
+        if (ds.facetToSelectors[_facetAddress].length() == 0) _addFacetEnumerable(ds, _facetAddress);
+        for (uint256 selectorIndex; selectorIndex < functionSelectorsLength;) {
+            bytes4 selector = _functionSelectors[selectorIndex];
+            _removeFunctionEnumerable(ds, ds.selectorToFacet[selector], selector);
+            _addFunctionEnumerable(ds, selector, _facetAddress);
+            unchecked {
+                ++selectorIndex;
+            }
+        }
+    }
+
     /// @dev Remove functions from the diamond.
     /// @param _facetAddress The address of the facet to remove functions from.
     /// @param _functionSelectors The function selectors to remove from the facet.
