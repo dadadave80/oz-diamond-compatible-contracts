@@ -110,14 +110,10 @@ library LibDiamond {
         if (_facetAddress == address(0)) revert CannotAddSelectorsToZeroAddress(_selectors);
         DiamondStorage storage ds = _diamondStorage();
         // Add new facet address if it does not exist
-        if (ds.facetToSelectors[_facetAddress].length() == 0) {
-            if (!_addFacetEnumerable(ds, _facetAddress)) revert FacetAlreadyAdded(_facetAddress);
-        }
+        if (ds.facetToSelectors[_facetAddress].length() == 0) _addFacetEnumerable(ds, _facetAddress);
         for (uint256 selectorIndex; selectorIndex < selectorsLength;) {
             bytes4 selector = _selectors[selectorIndex];
-            if (!_addFunctionEnumerable(ds, selector, _facetAddress)) {
-                revert CannotAddFunctionToDiamondThatAlreadyExists(selector);
-            }
+            _addFunctionEnumerable(ds, selector, _facetAddress);
             unchecked {
                 ++selectorIndex;
             }
@@ -193,9 +189,9 @@ library LibDiamond {
         _ds.facetAddresses.push(_facetAddress);
     }
 
-    function _addFacetEnumerable(DiamondStorage storage _ds, address _facetAddress) internal returns (bool) {
+    function _addFacetEnumerable(DiamondStorage storage _ds, address _facetAddress) internal {
         _enforceHasContractCode(_facetAddress);
-        return _ds.enumerableFacetAddresses.add(_facetAddress);
+        if (!_ds.enumerableFacetAddresses.add(_facetAddress)) revert FacetAlreadyAdded(_facetAddress);
     }
 
     /// @dev Add a function to the diamond.
@@ -211,12 +207,11 @@ library LibDiamond {
         _ds.selectorToFacetAndPosition[_selector].facetAddress = _facetAddress;
     }
 
-    function _addFunctionEnumerable(DiamondStorage storage _ds, bytes4 _selector, address _facetAddress)
-        internal
-        returns (bool)
-    {
+    function _addFunctionEnumerable(DiamondStorage storage _ds, bytes4 _selector, address _facetAddress) internal {
         _ds.selectorToFacet[_selector] = _facetAddress;
-        return _ds.facetToSelectors[_facetAddress].add(_selector);
+        if (!_ds.facetToSelectors[_facetAddress].add(_selector)) {
+            revert CannotAddFunctionToDiamondThatAlreadyExists(_selector);
+        }
     }
 
     /// @dev Remove a function from the diamond.
