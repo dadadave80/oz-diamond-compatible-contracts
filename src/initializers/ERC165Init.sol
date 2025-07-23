@@ -13,7 +13,7 @@ contract ERC165Init {
     /// @dev This function is called during the diamond cut process to set up
     ///      the initial state of the contract.
     function initERC165() external {
-        DiamondStorage storage ds = LibDiamond.diamondStorage();
+        DiamondStorage storage ds = LibDiamond._diamondStorage();
         /// @dev type(ERC165).interfaceId
         ds.supportedInterfaces[0x01ffc9a7] = true;
         /// @dev type(IERC173).interfaceId
