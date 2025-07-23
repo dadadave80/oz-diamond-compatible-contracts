@@ -315,12 +315,6 @@ library LibDiamond {
     /// @dev Enforce that the contract has bytecode.
     /// @param _contract The address of the contract to check.
     function _enforceHasContractCode(address _contract) internal view {
-        uint256 contractSize;
-        assembly {
-            contractSize := extcodesize(_contract)
-        }
-        if (contractSize == 0) {
-            revert NoBytecodeAtAddress(_contract);
-        }
+        if (_contract.code.length == 0) revert NoBytecodeAtAddress(_contract);
     }
 }
