@@ -1,7 +1,8 @@
-ds-test/=lib/solidity-stringutils/lib/ds-test/src/
-forge-std/=lib/forge-std/src/
-solady/=lib/solady/src/
-solidity-stringutils/=lib/solidity-stringutils/
 @diamond/=src/
 @diamond-script/=script/
 @diamond-test/=test/
+@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
+erc4626-tests/=lib/openzeppelin-contracts/lib/erc4626-tests/
+forge-std/=lib/forge-std/src/
+halmos-cheatcodes/=lib/openzeppelin-contracts/lib/halmos-cheatcodes/src/
+openzeppelin-contracts/=lib/openzeppelin-contracts/
