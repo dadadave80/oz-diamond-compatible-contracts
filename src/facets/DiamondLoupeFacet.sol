@@ -67,4 +67,10 @@ contract DiamondLoupeFacet is IDiamondLoupe {
     function supportsInterface(bytes4 _interfaceId) external view returns (bool) {
         return LibDiamond._diamondStorage().supportedInterfaces[_interfaceId];
     }
+
+    function bytes32SetToBytes4(bytes32[] memory _data) private pure returns (bytes4[] memory result_) {
+        assembly ("memory-safe") {
+            result_ := _data
+        }
+    }
 }
