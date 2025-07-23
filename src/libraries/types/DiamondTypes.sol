@@ -26,15 +26,12 @@ struct FacetFunctionSelectorsAndPosition {
 /// @dev Tracks function selector mappings, facet lists, and ERC-165 interface support
 /// @custom:storage-location erc7201:diamond.standard.diamond.storage
 struct DiamondStorage {
-    /// @notice Maps each function selector to the facet address and selector’s position in that facet
-    mapping(bytes4 => FacetAddressAndPosition) selectorToFacetAndPosition;
+    /// @notice Maps each function selector to its facet address
     mapping(bytes4 => address) selectorToFacet;
-    /// @notice Maps each facet address to its function selectors and the facet’s position in the global list
-    mapping(address => FacetFunctionSelectorsAndPosition) facetToSelectorsAndPosition;
+    /// @notice Maps each facet address to its function selectors
     mapping(address => EnumerableSet.Bytes32Set) facetToSelectors;
-    /// @notice Array of all facet addresses registered in the diamond
-    address[] facetAddresses;
-    EnumerableSet.AddressSet enumerableFacetAddresses;
+    /// @notice Enumerable set of all facet addresses registered in the diamond
+    EnumerableSet.AddressSet facetAddresses;
     /// @notice Tracks which interface IDs (ERC-165) are supported by the diamond
     mapping(bytes4 => bool) supportedInterfaces;
 }
