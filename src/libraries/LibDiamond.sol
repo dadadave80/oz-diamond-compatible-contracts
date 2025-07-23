@@ -15,6 +15,8 @@ import {
     CannotRemoveImmutableFunction,
     CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet,
     IncorrectFacetCutAction,
+    FacetAlreadyAdded,
+    FunctionAlreadyExists,
     InitializationFunctionReverted,
     NoBytecodeAtAddress,
     NoFacetsInDiamondCut,
@@ -96,6 +98,22 @@ library LibDiamond {
             if (oldFacetAddress != address(0)) revert CannotAddFunctionToDiamondThatAlreadyExists(selector);
             _addFunction(ds, selector, selectorPosition, _facetAddress);
             selectorPosition++;
+            unchecked {
+                ++selectorIndex;
+            }
+        }
+    }
+
+    function _addFunctionsEnumerable(address _facetAddress, bytes4[] memory _selectors) internal {
+        uint256 selectorsLength = _selectors.length;
+        if (selectorsLength == 0) revert NoSelectorsGivenToAdd();
+        if (_facetAddress == address(0)) revert CannotAddSelectorsToZeroAddress(_selectors);
+        DiamondStorage storage ds = _diamondStorage();
+        // Add new facet address if it does not exist
+        if (!_addFacetEnumerable(ds, _facetAddress)) revert FacetAlreadyAdded(_facetAddress);
+        for (uint256 selectorIndex; selectorIndex < selectorsLength;) {
+            bytes4 selector = _selectors[selectorIndex];
+            if (!_addFunctionEnumerable(ds, selector, _facetAddress)) revert FunctionAlreadyExists(selector);
             unchecked {
                 ++selectorIndex;
             }
