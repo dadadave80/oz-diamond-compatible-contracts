@@ -12,6 +12,7 @@ import {
     CannotAddFunctionToDiamondThatAlreadyExists,
     CannotAddSelectorsToZeroAddress,
     CannotRemoveFunctionThatDoesNotExist,
+    CannotRemoveFacetThatDoesNotExist,
     CannotRemoveImmutableFunction,
     CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet,
     IncorrectFacetCutAction,
@@ -266,7 +267,9 @@ library LibDiamond {
 
         // when there are no more selectors for this facet address, delete the facet address
         if (_ds.facetToSelectors[_facetAddress].length() == 0) {
-            if (!_ds.enumerableFacetAddresses.remove(_facetAddress)) revert FacetDoesNotExist(_facetAddress);
+            if (!_ds.enumerableFacetAddresses.remove(_facetAddress)) {
+                revert CannotRemoveFacetThatDoesNotExist(_facetAddress);
+            }
         }
     }
 

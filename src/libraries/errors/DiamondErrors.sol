@@ -29,7 +29,6 @@ error IncorrectFacetCutAction(uint8 action);
 
 error FacetAlreadyAdded(address facet);
 
-
 /// @notice Thrown when adding a function selector that already exists in the diamond
 /// @param selector The selector that is already present
 error CannotAddFunctionToDiamondThatAlreadyExists(bytes4 selector);
@@ -57,6 +56,8 @@ error RemoveFacetAddressMustBeZeroAddress(address facetAddress);
 /// @notice Thrown when attempting to remove a function selector that isn’t in the diamond
 /// @param selector The selector that could not be found
 error CannotRemoveFunctionThatDoesNotExist(bytes4 selector);
+
+error CannotRemoveFacetThatDoesNotExist(address facetAddress);
 
 /// @notice Thrown when attempting to remove an immutable function
 /// @param selector The selector of the immutable function
