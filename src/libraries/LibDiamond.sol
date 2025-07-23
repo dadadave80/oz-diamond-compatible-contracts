@@ -29,7 +29,6 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 /// @notice Internal library providing core functionality for EIP-2535 Diamond proxy management.
 /// @author David Dada
 /// @author Modified from Nick Mudge (https://github.com/mudgen/diamond-3-hardhat/blob/main/contracts/libraries/LibDiamond.sol)
-/// @author Modified from Timo (https://github.com/FydeTreasury/Diamond-Foundry/blob/main/src/libraries/LibDiamond.sol)
 ///
 /// @dev Defines the diamond storage layout and implements the `_diamondCut` operation and storage accessors
 library LibDiamond {
