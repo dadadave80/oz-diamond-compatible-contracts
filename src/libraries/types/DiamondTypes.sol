@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+
 //*//////////////////////////////////////////////////////////////////////////
 //                           DIAMOND STORAGE TYPES
 //////////////////////////////////////////////////////////////////////////*//
@@ -26,10 +28,13 @@ struct FacetFunctionSelectorsAndPosition {
 struct DiamondStorage {
     /// @notice Maps each function selector to the facet address and selector’s position in that facet
     mapping(bytes4 => FacetAddressAndPosition) selectorToFacetAndPosition;
+    mapping(bytes4 => address) selectorToFacet;
     /// @notice Maps each facet address to its function selectors and the facet’s position in the global list
     mapping(address => FacetFunctionSelectorsAndPosition) facetToSelectorsAndPosition;
+    mapping(address => EnumerableSet.Bytes32Set) facetToSelectors;
     /// @notice Array of all facet addresses registered in the diamond
     address[] facetAddresses;
+    EnumerableSet.AddressSet enumerableFacetAddresses;
     /// @notice Tracks which interface IDs (ERC-165) are supported by the diamond
     mapping(bytes4 => bool) supportedInterfaces;
 }
