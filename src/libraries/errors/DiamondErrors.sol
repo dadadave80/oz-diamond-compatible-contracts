@@ -29,9 +29,6 @@ error IncorrectFacetCutAction(uint8 action);
 
 error FacetAlreadyAdded(address facet);
 
-/// @notice Thrown when adding a function selector that already exists in the diamond
-/// @param selector The selector that is already present
-error FunctionAlreadyExists(bytes4 selector);
 
 /// @notice Thrown when adding a function selector that already exists in the diamond
 /// @param selector The selector that is already present
