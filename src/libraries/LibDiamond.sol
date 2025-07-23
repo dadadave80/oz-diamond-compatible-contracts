@@ -169,6 +169,20 @@ library LibDiamond {
         }
     }
 
+    function _removeFunctionsEnumerable(address _facetAddress, bytes4[] memory _functionSelectors) internal {
+        uint256 functionSelectorsLength = _functionSelectors.length;
+        if (_facetAddress != address(0)) revert RemoveFacetAddressMustBeZeroAddress(_facetAddress);
+        if (functionSelectorsLength == 0) revert NoSelectorsProvidedForFacetForCut(_facetAddress);
+        DiamondStorage storage ds = _diamondStorage();
+        for (uint256 selectorIndex; selectorIndex < functionSelectorsLength;) {
+            bytes4 selector = _functionSelectors[selectorIndex];
+            _removeFunctionEnumerable(ds, ds.selectorToFacet[selector], selector);
+            unchecked {
+                ++selectorIndex;
+            }
+        }
+    }
+
     /// @dev Add a facet address to the diamond.
     /// @param _ds Diamond storage.
     /// @param _facetAddress The address of the facet to add.
@@ -237,6 +251,22 @@ library LibDiamond {
             }
             _ds.facetAddresses.pop();
             delete _ds.facetToSelectorsAndPosition[_facetAddress].facetAddressPosition;
+        }
+    }
+
+    function _removeFunctionEnumerable(DiamondStorage storage _ds, address _facetAddress, bytes4 _selector) internal {
+        if (_facetAddress == address(0)) revert CannotRemoveFunctionThatDoesNotExist(_selector);
+        // an immutable function is a function defined directly in a diamond
+        if (_facetAddress == address(this)) revert CannotRemoveImmutableFunction(_selector);
+
+        if (!_ds.facetToSelectors[_facetAddress].remove(_selector)) {
+            revert CannotRemoveFunctionThatDoesNotExist(_selector);
+        }
+        delete _ds.selectorToFacet[_selector];
+
+        // if no more selectors for facet address then delete the facet address
+        if (_ds.facetToSelectors[_facetAddress].length() == 0) {
+            if (!_ds.enumerableFacetAddresses.remove(_facetAddress)) revert FacetDoesNotExist(_facetAddress);
         }
     }
 
