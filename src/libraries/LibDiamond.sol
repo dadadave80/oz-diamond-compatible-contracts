@@ -175,6 +175,14 @@ library LibDiamond {
         _ds.selectorToFacetAndPosition[_selector].facetAddress = _facetAddress;
     }
 
+    function _addFunctionEnumerable(DiamondStorage storage _ds, bytes4 _selector, address _facetAddress)
+        internal
+        returns (bool)
+    {
+        _ds.selectorToFacet[_selector] = _facetAddress;
+        return _ds.facetToSelectors[_facetAddress].add(_selector);
+    }
+
     /// @dev Remove a function from the diamond.
     /// @param _ds Diamond storage.
     /// @param _facetAddress The address of the facet to remove the function from.
