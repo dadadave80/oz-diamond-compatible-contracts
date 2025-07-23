@@ -40,7 +40,7 @@ A modular, upgradeable smart contract framework built using the [EIP-2535 Diamon
 1. Forge install this repo
 
 ```sh
-forge install DADADAVE80/diamond-template
+forge install DADADAVE80/erc2535-diamond-template
 ```
 
 2. Import the Diamond contract and facets into your project
