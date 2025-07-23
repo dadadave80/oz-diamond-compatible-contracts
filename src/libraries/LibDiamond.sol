@@ -22,6 +22,7 @@ import {
     NoSelectorsProvidedForFacetForCut,
     RemoveFacetAddressMustBeZeroAddress
 } from "@diamond/libraries/errors/DiamondErrors.sol";
+import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 /// @notice Internal library providing core functionality for EIP-2535 Diamond proxy management.
 /// @author David Dada
@@ -30,6 +31,9 @@ import {
 ///
 /// @dev Defines the diamond storage layout and implements the `_diamondCut` operation and storage accessors
 library LibDiamond {
+    using EnumerableSet for EnumerableSet.Bytes32Set;
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     //*//////////////////////////////////////////////////////////////////////////
     //                              DIAMOND STORAGE
     //////////////////////////////////////////////////////////////////////////*//
