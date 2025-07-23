@@ -20,14 +20,14 @@ contract DiamondLoupeFacet is IDiamondLoupe {
     /// @return facets_ Facet
     function facets() external view returns (Facet[] memory facets_) {
         DiamondStorage storage ds = LibDiamond._diamondStorage();
-        uint256 facetCount = ds.facetAddresses.length;
+        uint256 facetCount = ds.facetAddresses.length();
         facets_ = new Facet[](facetCount);
-        for (uint256 i; i < facetCount;) {
-            address facetAddr = ds.facetAddresses[i];
-            facets_[i].facetAddress = facetAddr;
-            facets_[i].functionSelectors = ds.facetToSelectorsAndPosition[facetAddr].functionSelectors;
+        for (uint256 facet; facet < facetCount;) {
+            address facetAddr = ds.facetAddresses.at(facet);
+            facets_[facet].facetAddress = facetAddr;
+            facets_[facet].functionSelectors = bytes32SetToBytes4(ds.facetToSelectors[facetAddr].values());
             unchecked {
-                ++i;
+                ++facet;
             }
         }
     }
