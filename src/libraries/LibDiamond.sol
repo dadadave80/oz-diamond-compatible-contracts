@@ -139,7 +139,7 @@ library LibDiamond {
     /// @param _facetAddress The address of the facet to add.
     function _addFacet(DiamondStorage storage _ds, address _facetAddress) internal {
         _enforceHasContractCode(_facetAddress);
-        if (!_ds.enumerableFacetAddresses.add(_facetAddress)) revert FacetAlreadyAdded(_facetAddress);
+        if (!_ds.facetAddresses.add(_facetAddress)) revert FacetAlreadyAdded(_facetAddress);
     }
 
     /// @dev Add a function to the diamond.
@@ -169,7 +169,7 @@ library LibDiamond {
 
         // when there are no more selectors for this facet address, delete the facet address
         if (_ds.facetToSelectors[_facetAddress].length() == 0) {
-            if (!_ds.enumerableFacetAddresses.remove(_facetAddress)) {
+            if (!_ds.facetAddresses.remove(_facetAddress)) {
                 revert CannotRemoveFacetThatDoesNotExist(_facetAddress);
             }
         }
