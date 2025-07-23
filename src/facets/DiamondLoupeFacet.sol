@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import {DiamondStorage, LibDiamond} from "@diamond/libraries/LibDiamond.sol";
 import {IDiamondLoupe} from "@diamond/interfaces/IDiamondLoupe.sol";
 import {Facet} from "@diamond/libraries/types/DiamondTypes.sol";
+import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 /// @notice Provides read-only functions to inspect the state of a Diamond proxy, including facets, function selectors, and supported interfaces
 /// @author David Dada
@@ -12,6 +13,9 @@ import {Facet} from "@diamond/libraries/types/DiamondTypes.sol";
 ///
 /// @dev Implements the IDiamondLoupe interface as defined in EIP-2535
 contract DiamondLoupeFacet is IDiamondLoupe {
+    using EnumerableSet for EnumerableSet.Bytes32Set;
+    using EnumerableSet for EnumerableSet.AddressSet;
+
     /// @notice Gets all facet addresses and their function selectors.
     /// @return facets_ Facet
     function facets() external view returns (Facet[] memory facets_) {
