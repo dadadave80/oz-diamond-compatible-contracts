@@ -16,4 +16,4 @@ docs/
 .wake/
 
 # Foundry gas snapshots
-.gas-snapshot
+# .gas-snapshot
