@@ -157,6 +157,11 @@ library LibDiamond {
         _ds.facetAddresses.push(_facetAddress);
     }
 
+    function _addFacetEnumerable(DiamondStorage storage _ds, address _facetAddress) internal returns (bool) {
+        _enforceHasContractCode(_facetAddress);
+        return _ds.enumerableFacetAddresses.add(_facetAddress);
+    }
+
     /// @dev Add a function to the diamond.
     /// @param _ds Diamond storage.
     /// @param _selector The function selector to add.
