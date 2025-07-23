@@ -41,8 +41,8 @@ contract DiamondLoupeFacet is IDiamondLoupe {
 
     /// @notice Get all the facet addresses used by a diamond.
     /// @return facetAddresses_
-    function facetAddresses() external view override returns (address[] memory facetAddresses_) {
-        facetAddresses_ = LibDiamond._diamondStorage().facetAddresses;
+    function facetAddresses() external view override returns (address[] memory) {
+        return LibDiamond._diamondStorage().facetAddresses.values();
     }
 
     /// @notice Gets the facet that supports the given selector.
