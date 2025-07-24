@@ -7,21 +7,6 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 //                           DIAMOND STORAGE TYPES
 //////////////////////////////////////////////////////////////////////////*//
 
-/// @dev This struct is used to store the facet address and position of the
-///      function selector in the facetToSelectorsAndPosition.functionSelectors
-///      array.
-struct FacetAddressAndPosition {
-    address facetAddress;
-    uint96 functionSelectorPosition;
-}
-
-/// @dev This struct is used to store the function selectors and position of
-///      the facet address in the facetAddresses array.
-struct FacetFunctionSelectorsAndPosition {
-    bytes4[] functionSelectors;
-    uint256 facetAddressPosition;
-}
-
 /// @notice Storage structure for managing facets and interface support in a Diamond (EIP-2535) proxy
 /// @dev Tracks function selector mappings, facet lists, and ERC-165 interface support
 /// @custom:storage-location erc7201:diamond.standard.diamond.storage
