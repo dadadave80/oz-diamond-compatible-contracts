@@ -7,7 +7,7 @@ import {DiamondCutFacet} from "@diamond/facets/DiamondCutFacet.sol";
 import {DiamondLoupeFacet} from "@diamond/facets/DiamondLoupeFacet.sol";
 import {OwnableRolesFacet} from "@diamond/facets/OwnableRolesFacet.sol";
 import {ERC165Init} from "@diamond/initializers/ERC165Init.sol";
-import {FacetCutAction, FacetCut, DiamondArgs} from "@diamond/libraries/types/DiamondTypes.sol";
+import {FacetCutAction, FacetCut, DiamondArgs} from "@diamond/libraries/types/DiamondStorage.sol";
 import {HelperContract} from "@diamond-test/helpers/HelperContract.sol";
 import {DeployDiamondHelper} from "@diamond-test/helpers/DeployDiamondHelper.sol";
 

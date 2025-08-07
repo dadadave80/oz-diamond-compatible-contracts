@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 import {Test} from "forge-std/Test.sol";
-import {Facet} from "@diamond/libraries/types/DiamondTypes.sol";
+import {Facet} from "@diamond/libraries/types/DiamondStorage.sol";
 import {DeployedDiamondState} from "./helpers/TestStates.sol";
 
 /// @title DiamondTester

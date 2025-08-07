@@ -3,7 +3,7 @@ pragma solidity ^0.8.4;
 
 import {Test} from "forge-std/Test.sol";
 import {IDiamondLoupe} from "@diamond/interfaces/IDiamondLoupe.sol";
-import {Facet} from "@diamond/libraries/types/DiamondTypes.sol";
+import {Facet} from "@diamond/libraries/types/DiamondStorage.sol";
 
 /// @notice A utility contract providing helper functions for working with diamond facets and selectors.
 /// @author David Dada

@@ -7,6 +7,9 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 //                           DIAMOND STORAGE TYPES
 //////////////////////////////////////////////////////////////////////////*//
 
+// keccak256(abi.encode(uint256(keccak256("diamond.standard.diamond.storage")) - 1)) & ~bytes32(uint256(0xff));
+bytes32 constant DIAMOND_STORAGE_SLOT = 0x44fefae66705534388ac21ba5f0775616856a675b8eaea9bb0b2507f06238700;
+
 /// @notice Storage structure for managing facets and interface support in a Diamond (EIP-2535) proxy
 /// @dev Tracks function selector mappings, facet lists, and ERC-165 interface support
 /// @custom:storage-location erc7201:diamond.standard.diamond.storage
@@ -20,9 +23,6 @@ struct DiamondStorage {
     /// @notice Tracks which interface IDs (ERC-165) are supported by the diamond
     mapping(bytes4 => bool) supportedInterfaces;
 }
-
-// keccak256(abi.encode(uint256(keccak256("diamond.standard.diamond.storage")) - 1)) & ~bytes32(uint256(0xff));
-bytes32 constant DIAMOND_STORAGE_LOCATION = 0x44fefae66705534388ac21ba5f0775616856a675b8eaea9bb0b2507f06238700;
 
 //*//////////////////////////////////////////////////////////////////////////
 //                             DIAMOND CUT TYPES

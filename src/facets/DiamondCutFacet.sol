@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 import {IDiamondCut} from "@diamond/interfaces/IDiamondCut.sol";
 import {LibDiamond} from "@diamond/libraries/LibDiamond.sol";
 import {LibOwnableRoles} from "@diamond/libraries/LibOwnableRoles.sol";
-import {FacetCut} from "@diamond/libraries/types/DiamondTypes.sol";
+import {FacetCut} from "@diamond/libraries/types/DiamondStorage.sol";
 
 /// @notice Simple single owner and multiroles authorization mixin.
 /// @author David Dada

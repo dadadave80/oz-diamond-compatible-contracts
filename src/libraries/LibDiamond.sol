@@ -5,8 +5,8 @@ import {
     FacetCut,
     FacetCutAction,
     DiamondStorage,
-    DIAMOND_STORAGE_LOCATION
-} from "@diamond/libraries/types/DiamondTypes.sol";
+    DIAMOND_STORAGE_SLOT
+} from "@diamond/libraries/types/DiamondStorage.sol";
 import "@diamond/libraries/logs/DiamondLogs.sol";
 import "@diamond/libraries/errors/DiamondErrors.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
@@ -26,9 +26,8 @@ library LibDiamond {
 
     /// @dev Get the diamond storage.
     function _diamondStorage() internal pure returns (DiamondStorage storage ds_) {
-        bytes32 position = DIAMOND_STORAGE_LOCATION;
         assembly {
-            ds_.slot := position
+            ds_.slot := DIAMOND_STORAGE_SLOT
         }
     }
 
