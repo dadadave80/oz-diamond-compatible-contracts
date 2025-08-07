@@ -7,23 +7,8 @@ import {
     DiamondStorage,
     DIAMOND_STORAGE_LOCATION
 } from "@diamond/libraries/types/DiamondTypes.sol";
-import {DiamondCut} from "@diamond/libraries/logs/DiamondLogs.sol";
-import {
-    CannotAddFunctionToDiamondThatAlreadyExists,
-    CannotAddSelectorsToZeroAddress,
-    CannotRemoveFunctionThatDoesNotExist,
-    CannotRemoveFacetThatDoesNotExist,
-    CannotRemoveImmutableFunction,
-    CannotReplaceFunctionWithTheSameFunctionFromTheSameFacet,
-    IncorrectFacetCutAction,
-    FacetAlreadyAdded,
-    InitializationFunctionReverted,
-    NoBytecodeAtAddress,
-    NoFacetsInDiamondCut,
-    NoSelectorsGivenToAdd,
-    NoSelectorsProvidedForFacetForCut,
-    RemoveFacetAddressMustBeZeroAddress
-} from "@diamond/libraries/errors/DiamondErrors.sol";
+import "@diamond/libraries/logs/DiamondLogs.sol";
+import "@diamond/libraries/errors/DiamondErrors.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 /// @notice Internal library providing core functionality for EIP-2535 Diamond proxy management.
