@@ -2,10 +2,7 @@
 pragma solidity ^0.8.4;
 
 import {
-    FacetCut,
-    FacetCutAction,
-    DiamondStorage,
-    DIAMOND_STORAGE_SLOT
+    FacetCut, FacetCutAction, DiamondStorage, DIAMOND_STORAGE_SLOT
 } from "@diamond/libraries/types/DiamondStorage.sol";
 import "@diamond/libraries/logs/DiamondLogs.sol";
 import "@diamond/libraries/errors/DiamondErrors.sol";
