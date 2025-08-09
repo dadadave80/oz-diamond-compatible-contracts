@@ -35,9 +35,9 @@ abstract contract DeployedDiamondState is DeployDiamondHelper {
         vm.startPrank(diamondOwner);
         diamond = _deployDiamond(diamondOwner);
 
-        diamondCut = DiamondCutFacet(address(diamond));
-        diamondLoupe = DiamondLoupeFacet(address(diamond));
-        ownableRoles = OwnableRolesFacet(address(diamond));
+        diamondCut = DiamondCutFacet(diamond);
+        diamondLoupe = DiamondLoupeFacet(diamond);
+        ownableRoles = OwnableRolesFacet(diamond);
 
         facetAddresses = diamondLoupe.facetAddresses();
     }
