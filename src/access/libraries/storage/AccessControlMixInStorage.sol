@@ -9,7 +9,7 @@ bytes32 constant ACCESS_CONTROL_MIXIN_STORAGE_SLOT = 0xb4f1e0b5ab30b2595971826b2
 
 /// @custom:storage-location erc7201:openzeppelin.storage.AccessControlMixin
 struct AccessControlMixinStorage {
-    uint256[50] __gap; // gap for newbie tech debt
+    uint256[10] __gap; // gap for newbie tech debt
     mapping(bytes32 role => RoleData) roles;
     // pending admin pair read/written together frequently
     address pendingDefaultAdmin;
