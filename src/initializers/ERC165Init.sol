@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {DiamondStorage, LibDiamond} from "@diamond/libraries/LibDiamond.sol";
+import {DiamondStorage, LibDiamond} from "@diamond/proxy/diamond/libraries/LibDiamond.sol";
+import {ERC165Storage, LibERC165} from "@diamond/utils/introspection/LibERC165.sol";
 
 /// @notice Provides an initializer to register standard interface support (ERC-165, ERC-173, IDiamondCut, IDiamondLoupe)
 /// @author David Dada
@@ -12,15 +13,14 @@ contract ERC165Init {
     /// @notice Initialize the contract with the ERC165 interface support.
     /// @dev This function is called during the diamond cut process to set up
     ///      the initial state of the contract.
-    function initERC165() external {
-        DiamondStorage storage ds = LibDiamond._diamondStorage();
+    function registerInterfaces() external {
         /// @dev type(ERC165).interfaceId
-        ds.supportedInterfaces[0x01ffc9a7] = true;
-        /// @dev type(IERC173).interfaceId
-        ds.supportedInterfaces[0x7f5828d0] = true;
+        LibERC165._registerInterface(0x01ffc9a7);
         /// @dev type(IDiamondCut).interfaceId
-        ds.supportedInterfaces[0x1f931c1c] = true;
+        LibERC165._registerInterface(0x1f931c1c);
         /// @dev type(IDiamondLoupe).interfaceId
-        ds.supportedInterfaces[0x48e2b093] = true;
+        LibERC165._registerInterface(0x48e2b093);
+        /// @dev type(IERC173).interfaceId for Ownable
+        LibERC165._registerInterface(0x7f5828d0);
     }
 }
