@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import {Facet} from "@diamond/libraries/types/DiamondStorage.sol";
+import {Facet} from "@diamond/proxy/diamond/libraries/DiamondStorage.sol";
 
 interface IDiamondLoupe {
     /// @notice Gets all facet addresses and their function selectors.
