@@ -67,7 +67,7 @@ contract AccessControlDefaultAdminRulesImplTest is DiamondBase {
         accessControl.beginDefaultAdminTransfer(alice);
         (, uint48 firstSchedule) = accessControl.pendingDefaultAdmin();
         int8[3] memory values = [-1, 0, 1];
-        for (uint256 i; i < values.length; ++i) {
+        for (uint256 i; i < 3; ++i) {
             vm.warp(uint256(int256(int48(firstSchedule)) + values[i]));
             (address newAdmin, uint48 schedule) = accessControl.pendingDefaultAdmin();
             assertEq(newAdmin, alice);
