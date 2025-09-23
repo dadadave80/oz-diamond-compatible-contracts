@@ -63,6 +63,7 @@ library LibAccessControlDefaultAdminRules {
                 revert IAccessControlDefaultAdminRules.AccessControlEnforcedDefaultAdminDelay(schedule);
             }
             delete _accessControlDefaultAdminRulesStorage().pendingDefaultAdminSchedule;
+            LibOwnable._transferOwnership(address(0));
         }
         LibAccessControl._renounceRole(_role, _account);
     }
