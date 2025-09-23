@@ -52,7 +52,9 @@ contract AccessControlMixinImpl is AccessControlDefaultAdminRulesUpgradeable, Ac
         virtual
         override(AccessControlUpgradeable, AccessControlDefaultAdminRulesUpgradeable, IAccessControl)
     {
-        super.renounceRole(role, account);
+        // TODO: implement better
+        AccessControlDefaultAdminRulesUpgradeable.renounceRole(role, account);
+        AccessControlEnumerableUpgradeable._removeRoleMember(role, account);
     }
 
     function _grantRole(bytes32 role, address account)
@@ -73,7 +75,7 @@ contract AccessControlMixinImpl is AccessControlDefaultAdminRulesUpgradeable, Ac
         override(AccessControlEnumerableUpgradeable, AccessControlDefaultAdminRulesUpgradeable)
         returns (bool revoked)
     {
-        revoked = AccessControlDefaultAdminRulesUpgradeable._revokeRole(role, account);
+        revoked = super._revokeRole(role, account);
         if (revoked) {
             AccessControlEnumerableUpgradeable._removeRoleMember(role, account);
         }
