@@ -35,12 +35,10 @@ contract AccessControlEnumerableMock is AccessControlEnumerableImpl {
 }
 
 contract AccessControlEnumerableFacetTest is DiamondBase, AccessControlFacetTest {
-    AccessControlEnumerableMock accessControlEnum;
-
     function setUp() public virtual override(AccessControlFacetTest, DiamondBase) {
         DiamondBase.setUp();
 
-        accessControlEnum = new AccessControlEnumerableMock();
+        AccessControlEnumerableMock accessControlEnum = new AccessControlEnumerableMock();
 
         FacetCut[] memory cut = new FacetCut[](1);
 
@@ -51,12 +49,6 @@ contract AccessControlEnumerableFacetTest is DiamondBase, AccessControlFacetTest
         });
 
         diamondCut.diamondCut(cut, address(accessControlEnum), abi.encodeWithSignature("init(address)", owner));
-
-        accessControlEnum = AccessControlEnumerableMock(diamond);
-    }
-
-    function _mock() internal view virtual override returns (address) {
-        return address(accessControlEnum);
     }
 
     function test_supportsInterface() public view virtual override {
@@ -65,25 +57,25 @@ contract AccessControlEnumerableFacetTest is DiamondBase, AccessControlFacetTest
     }
 
     function test_enumerateRoleBearers() public {
-        AccessControlEnumerableMock(_mock()).grantRole(ROLE, alice);
-        AccessControlEnumerableMock(_mock()).grantRole(ROLE, bob);
-        AccessControlEnumerableMock(_mock()).grantRole(ROLE, charlie);
-        AccessControlEnumerableMock(_mock()).revokeRole(ROLE, bob);
+        AccessControlEnumerableMock(diamond).grantRole(ROLE, alice);
+        AccessControlEnumerableMock(diamond).grantRole(ROLE, bob);
+        AccessControlEnumerableMock(diamond).grantRole(ROLE, charlie);
+        AccessControlEnumerableMock(diamond).revokeRole(ROLE, bob);
 
         address[2] memory expectedMembers = [alice, charlie];
-        uint256 memberCount = AccessControlEnumerableMock(_mock()).getRoleMemberCount(ROLE);
+        uint256 memberCount = AccessControlEnumerableMock(diamond).getRoleMemberCount(ROLE);
 
         assertEq(memberCount, expectedMembers.length);
         for (uint256 i; i < memberCount; ++i) {
-            assertEq(AccessControlEnumerableMock(_mock()).getRoleMember(ROLE, i), expectedMembers[i]);
+            assertEq(AccessControlEnumerableMock(diamond).getRoleMember(ROLE, i), expectedMembers[i]);
         }
     }
 
     function test_enumerateRolesAfterRenounce() public {
-        assertEq(AccessControlEnumerableMock(_mock()).getRoleMemberCount(ROLE), 0);
-        AccessControlEnumerableMock(_mock()).grantRole(ROLE, owner);
-        assertEq(AccessControlEnumerableMock(_mock()).getRoleMemberCount(ROLE), 1);
-        AccessControlEnumerableMock(_mock()).renounceRole(ROLE, owner);
-        assertEq(AccessControlEnumerableMock(_mock()).getRoleMemberCount(ROLE), 0);
+        assertEq(AccessControlEnumerableMock(diamond).getRoleMemberCount(ROLE), 0);
+        AccessControlEnumerableMock(diamond).grantRole(ROLE, owner);
+        assertEq(AccessControlEnumerableMock(diamond).getRoleMemberCount(ROLE), 1);
+        AccessControlEnumerableMock(diamond).renounceRole(ROLE, owner);
+        assertEq(AccessControlEnumerableMock(diamond).getRoleMemberCount(ROLE), 0);
     }
 }
