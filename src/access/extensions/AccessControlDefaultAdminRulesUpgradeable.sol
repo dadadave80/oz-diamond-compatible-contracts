@@ -6,6 +6,7 @@ import {AccessControlUpgradeable} from "@diamond/access/AccessControlUpgradeable
 import {
     DEFAULT_ADMIN_ROLE,
     IAccessControlDefaultAdminRules,
+    LibAccessControl,
     LibAccessControlDefaultAdminRules
 } from "@diamond/access/libraries/LibAccessControlDefaultAdminRules.sol";
 import {LibOwnable} from "@diamond/access/libraries/LibOwnable.sol";
@@ -58,6 +59,14 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is
         onlyInitializing
     {
         __AccessControlDefaultAdminRules_init_unchained(initialDelay, initialDefaultAdmin);
+    }
+
+    function __AccessControlDefaultAdminRules_init_facet(uint48 initialDelay, address initialDefaultAdmin)
+        internal
+        onlyInitializing
+    {
+        __AccessControlDefaultAdminRules_init_unchained(initialDelay, initialDefaultAdmin);
+        LibAccessControlDefaultAdminRules._registerInterface();
     }
 
     function __AccessControlDefaultAdminRules_init_unchained(uint48 initialDelay, address initialDefaultAdmin)
