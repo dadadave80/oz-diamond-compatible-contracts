@@ -31,14 +31,13 @@ contract AccessControlMock is AccessControlImpl {
 }
 
 contract AccessControlFacetTest is DiamondBase {
-    AccessControlMock accessControl;
     bytes32 public constant ROLE = keccak256("ROLE");
     bytes32 public constant ROLE_ADMIN = keccak256("ROLE_ADMIN");
 
     function setUp() public virtual override {
         super.setUp();
 
-        accessControl = new AccessControlMock();
+        AccessControlMock accessControl = new AccessControlMock();
 
         FacetCut[] memory cut = new FacetCut[](1);
 
@@ -49,12 +48,6 @@ contract AccessControlFacetTest is DiamondBase {
         });
 
         diamondCut.diamondCut(cut, address(accessControl), abi.encodeWithSignature("init(address)", owner));
-
-        accessControl = AccessControlMock(diamond);
-    }
-
-    function _mock() internal view virtual returns (address) {
-        return address(accessControl);
     }
 
     function test_supportsInterface() public view virtual {
@@ -62,23 +55,23 @@ contract AccessControlFacetTest is DiamondBase {
     }
 
     function test_hasDefaultAdminRole() public view {
-        assertTrue(AccessControlMock(_mock()).hasRole(DEFAULT_ADMIN_ROLE, owner));
+        assertTrue(AccessControlMock(diamond).hasRole(DEFAULT_ADMIN_ROLE, owner));
     }
 
     function test_roleAdminIsDefaultAdminRole() public view {
-        assertEq(AccessControlMock(_mock()).getRoleAdmin(ROLE), DEFAULT_ADMIN_ROLE);
+        assertEq(AccessControlMock(diamond).getRoleAdmin(ROLE), DEFAULT_ADMIN_ROLE);
     }
 
     function test_defaultAdminRoleAdminIsItself() public view {
-        assertEq(AccessControlMock(_mock()).getRoleAdmin(DEFAULT_ADMIN_ROLE), DEFAULT_ADMIN_ROLE);
+        assertEq(AccessControlMock(diamond).getRoleAdmin(DEFAULT_ADMIN_ROLE), DEFAULT_ADMIN_ROLE);
     }
 
     function test_grantRole() public {
         vm.prank(owner);
         vm.expectEmit(diamond);
         emit IAccessControl.RoleGranted(ROLE, bob, owner);
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
-        assertTrue(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).grantRole(ROLE, bob);
+        assertTrue(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function testRevert_nonAdminCannotGrantRole() public {
@@ -86,23 +79,23 @@ contract AccessControlFacetTest is DiamondBase {
         vm.expectRevert(
             abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, alice, DEFAULT_ADMIN_ROLE)
         );
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
     }
 
     function test_grantRoleMultipleTimes() public {
         vm.expectEmit(diamond);
         emit IAccessControl.RoleGranted(ROLE, bob, owner);
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
-        assertTrue(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
+        assertTrue(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function test_revokeRole() public {
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
         vm.expectEmit(diamond);
         emit IAccessControl.RoleRevoked(ROLE, bob, owner);
-        AccessControlMock(_mock()).revokeRole(ROLE, bob);
-        assertFalse(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).revokeRole(ROLE, bob);
+        assertFalse(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function testRevert_nonAdminCannotRevokeRole() public {
@@ -110,50 +103,50 @@ contract AccessControlFacetTest is DiamondBase {
         vm.expectRevert(
             abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, alice, DEFAULT_ADMIN_ROLE)
         );
-        AccessControlMock(_mock()).revokeRole(ROLE, bob);
+        AccessControlMock(diamond).revokeRole(ROLE, bob);
     }
 
     function test_revokeRoleMultipleTimes() public {
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
-        AccessControlMock(_mock()).revokeRole(ROLE, bob);
-        AccessControlMock(_mock()).revokeRole(ROLE, bob);
-        assertFalse(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).grantRole(ROLE, bob);
+        AccessControlMock(diamond).revokeRole(ROLE, bob);
+        AccessControlMock(diamond).revokeRole(ROLE, bob);
+        assertFalse(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function test_renounceRole() public {
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
         vm.prank(bob);
         vm.expectEmit(diamond);
         emit IAccessControl.RoleRevoked(ROLE, bob, bob);
-        AccessControlMock(_mock()).renounceRole(ROLE, bob);
-        assertFalse(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).renounceRole(ROLE, bob);
+        assertFalse(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function test_nonBearerCanRenounceRole() public {
         vm.prank(alice);
-        AccessControlMock(_mock()).renounceRole(ROLE, alice);
-        assertFalse(AccessControlMock(_mock()).hasRole(ROLE, alice));
+        AccessControlMock(diamond).renounceRole(ROLE, alice);
+        assertFalse(AccessControlMock(diamond).hasRole(ROLE, alice));
     }
 
     function test_renounceRoleMultipleTimes() public {
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
         vm.prank(bob);
-        AccessControlMock(_mock()).renounceRole(ROLE, bob);
+        AccessControlMock(diamond).renounceRole(ROLE, bob);
         vm.prank(bob);
-        AccessControlMock(_mock()).renounceRole(ROLE, bob);
-        assertFalse(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).renounceRole(ROLE, bob);
+        assertFalse(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function _internal_setRoleAdmin() public {
         vm.expectEmit(diamond);
         emit IAccessControl.RoleAdminChanged(ROLE, DEFAULT_ADMIN_ROLE, ROLE_ADMIN);
-        AccessControlMock(_mock())._internal_setRoleAdmin(ROLE, ROLE_ADMIN);
-        AccessControlMock(_mock()).grantRole(ROLE_ADMIN, alice);
+        AccessControlMock(diamond)._internal_setRoleAdmin(ROLE, ROLE_ADMIN);
+        AccessControlMock(diamond).grantRole(ROLE_ADMIN, alice);
     }
 
     function test_getRoleAdmin() public {
         _internal_setRoleAdmin();
-        assertEq(AccessControlMock(_mock()).getRoleAdmin(ROLE), ROLE_ADMIN);
+        assertEq(AccessControlMock(diamond).getRoleAdmin(ROLE), ROLE_ADMIN);
     }
 
     function test_newAdminCanGrantRoles() public {
@@ -161,19 +154,19 @@ contract AccessControlFacetTest is DiamondBase {
         vm.prank(alice);
         vm.expectEmit(diamond);
         emit IAccessControl.RoleGranted(ROLE, bob, alice);
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
-        assertTrue(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).grantRole(ROLE, bob);
+        assertTrue(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function test_newAdminCanRevokeRoles() public {
         _internal_setRoleAdmin();
         vm.prank(alice);
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
         vm.prank(alice);
         vm.expectEmit(diamond);
         emit IAccessControl.RoleRevoked(ROLE, bob, alice);
-        AccessControlMock(_mock()).revokeRole(ROLE, bob);
-        assertFalse(AccessControlMock(_mock()).hasRole(ROLE, bob));
+        AccessControlMock(diamond).revokeRole(ROLE, bob);
+        assertFalse(AccessControlMock(diamond).hasRole(ROLE, bob));
     }
 
     function testRevert_oldAdminCannotGrantRoles() public {
@@ -181,7 +174,7 @@ contract AccessControlFacetTest is DiamondBase {
         vm.expectRevert(
             abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, owner, ROLE_ADMIN)
         );
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
     }
 
     function testRevert_oldAdminCannotRevokeRoles() public {
@@ -189,44 +182,44 @@ contract AccessControlFacetTest is DiamondBase {
         vm.expectRevert(
             abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, owner, ROLE_ADMIN)
         );
-        AccessControlMock(_mock()).revokeRole(ROLE, bob);
+        AccessControlMock(diamond).revokeRole(ROLE, bob);
     }
 
     function test_checkRole() public {
-        AccessControlMock(_mock()).grantRole(ROLE, bob);
+        AccessControlMock(diamond).grantRole(ROLE, bob);
         vm.prank(bob);
-        AccessControlMock(_mock())._internal_checkRole(ROLE);
+        AccessControlMock(diamond)._internal_checkRole(ROLE);
     }
 
     function testRevert_nonBearerRole1() public {
         vm.prank(alice);
         vm.expectRevert(abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, alice, ROLE));
-        AccessControlMock(_mock())._internal_checkRole(ROLE);
+        AccessControlMock(diamond)._internal_checkRole(ROLE);
     }
 
     function testRevert_nonBearerRole2() public {
         vm.prank(alice);
         vm.expectRevert(abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, alice, ROLE));
-        AccessControlMock(_mock())._internal_checkRole(ROLE);
+        AccessControlMock(diamond)._internal_checkRole(ROLE);
     }
 
     function test_internal_grantRoleReturnsTrueIfAccountDoesNotHaveRole() public {
         vm.expectEmit(diamond);
         emit IAccessControl.RoleGranted(ROLE, alice, owner);
-        assertTrue(AccessControlMock(_mock())._internal_grantRole(ROLE, alice));
+        assertTrue(AccessControlMock(diamond)._internal_grantRole(ROLE, alice));
     }
 
     function test_internal_grantRoleReturnsFalseIfAccountHasRole() public {
-        AccessControlMock(_mock()).grantRole(ROLE, alice);
-        assertFalse(AccessControlMock(_mock())._internal_grantRole(ROLE, alice));
+        AccessControlMock(diamond).grantRole(ROLE, alice);
+        assertFalse(AccessControlMock(diamond)._internal_grantRole(ROLE, alice));
     }
 
     function test_internal_revokeRoleReturnsTrueIfAccountHasRole() public {
-        AccessControlMock(_mock()).grantRole(ROLE, alice);
-        assertTrue(AccessControlMock(_mock())._internal_revokeRole(ROLE, alice));
+        AccessControlMock(diamond).grantRole(ROLE, alice);
+        assertTrue(AccessControlMock(diamond)._internal_revokeRole(ROLE, alice));
     }
 
     function test_internal_revokeRoleReturnsFalseIfAccountDoesNotHaveRole() public {
-        assertFalse(AccessControlMock(_mock())._internal_revokeRole(ROLE, alice));
+        assertFalse(AccessControlMock(diamond)._internal_revokeRole(ROLE, alice));
     }
 }
