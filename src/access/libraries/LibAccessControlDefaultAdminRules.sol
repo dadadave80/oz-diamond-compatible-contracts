@@ -28,7 +28,8 @@ library LibAccessControlDefaultAdminRules {
         }
     }
 
-    function _registerInterfaces() internal {
+    function _registerInterface() internal {
+        LibAccessControl._registerInterface();
         LibERC165._registerInterface(type(IAccessControlDefaultAdminRules).interfaceId);
     }
 
