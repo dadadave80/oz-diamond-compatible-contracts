@@ -10,6 +10,7 @@ remappings = [
 auto_detect_remappings = true
 optimizer_runs = 100_000
 ffi = true
+via_ir = false
 
 [fmt]
 sort_imports = true
