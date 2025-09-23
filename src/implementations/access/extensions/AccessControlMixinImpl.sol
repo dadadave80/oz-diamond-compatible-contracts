@@ -26,6 +26,11 @@ contract AccessControlMixinImpl is AccessControlDefaultAdminRulesUpgradeable, Ac
         _disableInitializers();
     }
 
+    function init(uint48 delay, address admin) public virtual initializer {
+        __AccessControlDefaultAdminRules_init(delay, admin);
+        __AccessControlEnumerable_init(admin);
+    }
+
     function grantRole(bytes32 role, address account)
         public
         virtual
