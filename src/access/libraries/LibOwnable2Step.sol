@@ -2,9 +2,14 @@
 pragma solidity ^0.8.20;
 
 import {LibOwnable} from "@diamond/access/libraries/LibOwnable.sol";
-import {
-    OWNABLE2STEP_STORAGE_SLOT, Ownable2StepStorage
-} from "@diamond/access/libraries/storage/Ownable2StepStorage.sol";
+
+// keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.Ownable2Step")) - 1)) & ~bytes32(uint256(0xff))
+bytes32 constant OWNABLE2STEP_STORAGE_SLOT = 0x237e158222e3e6968b72b9db0d8043aacf074ad9f650f0d1606b4d82ee432c00;
+
+/// @custom:storage-location erc7201:openzeppelin.storage.Ownable2Step
+struct Ownable2StepStorage {
+    address pendingOwner;
+}
 
 library LibOwnable2Step {
     function _ownable2StepStorage() internal pure returns (Ownable2StepStorage storage os_) {
