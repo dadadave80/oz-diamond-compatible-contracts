@@ -18,6 +18,11 @@ abstract contract AccessControlEnumerableUpgradeable is
         __AccessControlEnumerable_init_unchained(admin);
     }
 
+    function __AccessControlEnumerable_init_facet(address admin) internal onlyInitializing {
+        __AccessControlEnumerable_init_unchained(admin);
+        LibAccessControlEnumerable._registerInterface();
+    }
+
     function __AccessControlEnumerable_init_unchained(address admin) internal onlyInitializing {
         __AccessControl_init_unchained(admin);
     }

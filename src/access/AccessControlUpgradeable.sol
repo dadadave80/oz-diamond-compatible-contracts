@@ -61,6 +61,11 @@ abstract contract AccessControlUpgradeable is Initializable, ContextUpgradeable,
         __AccessControl_init_unchained(admin);
     }
 
+    function __AccessControl_init_facet(address admin) internal onlyInitializing {
+        __AccessControl_init_unchained(admin);
+        LibAccessControl._registerInterface();
+    }
+
     function __AccessControl_init_unchained(address admin) internal onlyInitializing {
         LibAccessControl._init(admin);
     }
