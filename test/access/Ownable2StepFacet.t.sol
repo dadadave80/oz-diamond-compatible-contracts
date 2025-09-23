@@ -1,12 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {Ownable2StepMock} from "@diamond-test/mocks/access/Ownable2StepMock.sol";
 import {DiamondBase} from "@diamond-test/states/DiamondBase.sol";
 import {OwnershipTransferStarted} from "@diamond/access/Ownable2StepUpgradeable.sol";
 import {OwnableUnauthorizedAccount, OwnershipTransferred} from "@diamond/access/libraries/LibOwnable.sol";
+
+import {Ownable2StepImpl} from "@diamond/implementations/access/Ownable2StepImpl.sol";
 import {DiamondInit} from "@diamond/initializers/DiamondInit.sol";
 import {FacetCut, FacetCutAction} from "@diamond/proxy/diamond/libraries/DiamondStorage.sol";
+
+contract Ownable2StepMock is Ownable2StepImpl {
+    function _internal_transferOwnership(address newOwner) external {
+        _transferOwnership(newOwner);
+    }
+}
 
 contract Ownable2StepImplTest is DiamondBase {
     Ownable2StepMock public ownable2Step;
