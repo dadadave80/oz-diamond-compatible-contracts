@@ -58,11 +58,12 @@ library LibAccessControlDefaultAdminRules {
 
     function _renounceRole(bytes32 _role, address _account) internal {
         if (_role == DEFAULT_ADMIN_ROLE && _account == _defaultAdmin()) {
-            (address newDefaultAdmin, uint48 schedule) = _pendingDefaultAdmin();
+            AccessControlDefaultAdminRulesStorage storage acs = _accessControlDefaultAdminRulesStorage();
+            (address newDefaultAdmin, uint48 schedule) = __pendingDefaultAdmin(acs);
             if (newDefaultAdmin != address(0) || !_isScheduleSet(schedule) || !_hasSchedulePassed(schedule)) {
                 revert IAccessControlDefaultAdminRules.AccessControlEnforcedDefaultAdminDelay(schedule);
             }
-            delete _accessControlDefaultAdminRulesStorage().pendingDefaultAdminSchedule;
+            delete acs.pendingDefaultAdminSchedule;
             LibOwnable._transferOwnership(address(0));
         }
         LibAccessControl._renounceRole(_role, _account);
@@ -83,7 +84,8 @@ library LibAccessControlDefaultAdminRules {
     }
 
     function _acceptDefaultAdminTransfer() internal {
-        (address newDefaultAdmin, uint48 schedule) = _pendingDefaultAdmin();
+        AccessControlDefaultAdminRulesStorage storage acs = _accessControlDefaultAdminRulesStorage();
+        (address newDefaultAdmin, uint48 schedule) = __pendingDefaultAdmin(acs);
         if (LibContext._msgSender() != newDefaultAdmin) {
             // Enforce newDefaultAdmin explicit acceptance.
             revert IAccessControlDefaultAdminRules.AccessControlInvalidDefaultAdmin(LibContext._msgSender());
@@ -93,7 +95,6 @@ library LibAccessControlDefaultAdminRules {
         }
         _revokeRole(DEFAULT_ADMIN_ROLE, _defaultAdmin());
         _grantRole(DEFAULT_ADMIN_ROLE, newDefaultAdmin);
-        AccessControlDefaultAdminRulesStorage storage acs = _accessControlDefaultAdminRulesStorage();
         delete acs.pendingDefaultAdmin;
         delete acs.pendingDefaultAdminSchedule;
     }
@@ -138,8 +139,15 @@ library LibAccessControlDefaultAdminRules {
     }
 
     function _pendingDefaultAdmin() internal view returns (address newAdmin, uint48 schedule) {
-        AccessControlDefaultAdminRulesStorage storage acs = _accessControlDefaultAdminRulesStorage();
-        return (acs.pendingDefaultAdmin, acs.pendingDefaultAdminSchedule);
+        (newAdmin, schedule) = __pendingDefaultAdmin(_accessControlDefaultAdminRulesStorage());
+    }
+
+    function __pendingDefaultAdmin(AccessControlDefaultAdminRulesStorage storage _acs)
+        private
+        view
+        returns (address, uint48)
+    {
+        return (_acs.pendingDefaultAdmin, _acs.pendingDefaultAdminSchedule);
     }
 
     function _defaultAdminDelay() internal view returns (uint48) {
