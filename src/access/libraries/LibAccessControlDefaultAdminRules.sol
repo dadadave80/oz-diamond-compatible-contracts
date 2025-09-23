@@ -1,19 +1,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import {LibAccessControl} from "@diamond/access/libraries/LibAccessControl.sol";
+import {DEFAULT_ADMIN_ROLE, LibAccessControl} from "@diamond/access/libraries/LibAccessControl.sol";
 import {LibOwnable} from "@diamond/access/libraries/LibOwnable.sol";
-import {
-    ACCESS_CONTROL_DEFAULT_ADMIN_RULES_STORAGE_SLOT,
-    AccessControlDefaultAdminRulesStorage,
-    DEFAULT_ADMIN_ROLE
-} from "@diamond/access/libraries/storage/AccessControlDefaultAdminRulesStorage.sol";
 import {LibContext} from "@diamond/utils/context/LibContext.sol";
 import {LibERC165} from "@diamond/utils/introspection/LibERC165.sol";
 import {IAccessControlDefaultAdminRules} from
     "@openzeppelin/contracts/access/extensions/IAccessControlDefaultAdminRules.sol";
 import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
 import {SafeCast} from "@openzeppelin/contracts/utils/math/SafeCast.sol";
+
+// keccak256(abi.encode(uint256(keccak256("openzeppelin.storage.AccessControlDefaultAdminRules")) - 1)) & ~bytes32(uint256(0xff))
+bytes32 constant ACCESS_CONTROL_DEFAULT_ADMIN_RULES_STORAGE_SLOT =
+    0xeef3dac4538c82c8ace4063ab0acd2d15cdb5883aa1dff7c2673abb3d8698400;
+
+/// @custom:storage-location erc7201:openzeppelin.storage.AccessControlDefaultAdminRules
+struct AccessControlDefaultAdminRulesStorage {
+    // pending admin pair read/written together frequently
+    address pendingDefaultAdmin;
+    uint48 pendingDefaultAdminSchedule; // 0 == unset
+    uint48 currentDelay;
+    // use ownable's owner slot
+    // address currentDefaultAdmin;
+    // pending delay pair read/written together frequently
+    uint48 pendingDelay;
+    uint48 pendingDelaySchedule; // 0 == unset
+}
 
 library LibAccessControlDefaultAdminRules {
     using SafeCast for uint256;
