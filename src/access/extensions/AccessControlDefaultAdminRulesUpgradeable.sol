@@ -8,6 +8,7 @@ import {
     IAccessControlDefaultAdminRules,
     LibAccessControlDefaultAdminRules
 } from "@diamond/access/libraries/LibAccessControlDefaultAdminRules.sol";
+import {LibOwnable} from "@diamond/access/libraries/LibOwnable.sol";
 
 import {Initializable} from "@diamond/utils/initializable/Initializable.sol";
 import {IAccessControl} from "@openzeppelin/contracts/access/IAccessControl.sol";
@@ -68,6 +69,7 @@ abstract contract AccessControlDefaultAdminRulesUpgradeable is
         }
         LibAccessControlDefaultAdminRules._accessControlDefaultAdminRulesStorage().currentDelay = initialDelay;
         _grantRole(DEFAULT_ADMIN_ROLE, initialDefaultAdmin);
+        LibOwnable._transferOwnership(initialDefaultAdmin);
     }
 
     /**
