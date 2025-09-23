@@ -2,8 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {DiamondBase} from "@diamond-test/states/DiamondBase.sol";
-import {DEFAULT_ADMIN_ROLE} from "@diamond/access/libraries/storage/AccessControlStorage.sol";
-
+import {DEFAULT_ADMIN_ROLE} from "@diamond/access/libraries/LibAccessControl.sol";
 import {AccessControlImpl} from "@diamond/implementations/access/AccessControlImpl.sol";
 import {FacetCut, FacetCutAction} from "@diamond/proxy/diamond/libraries/DiamondStorage.sol";
 import {IAccessControl} from "@openzeppelin/contracts/access/IAccessControl.sol";
