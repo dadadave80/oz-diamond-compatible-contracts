@@ -54,8 +54,6 @@ contract AccessControlMixinTest is
     AccessControlEnumerableFacetTest,
     AccessControlDefaultAdminRulesFacetTest
 {
-    AccessControlMixinMock accessControlMixin;
-
     function setUp()
         public
         override(
@@ -64,7 +62,7 @@ contract AccessControlMixinTest is
     {
         DiamondBase.setUp();
 
-        accessControlMixin = new AccessControlMixinMock();
+        AccessControlMixinMock accessControlMixin = new AccessControlMixinMock();
 
         FacetCut[] memory cut = new FacetCut[](2);
 
@@ -83,18 +81,6 @@ contract AccessControlMixinTest is
         diamondCut.diamondCut(
             cut, address(accessControlMixin), abi.encodeWithSignature("init(uint48,address)", DELAY, owner)
         );
-
-        accessControlMixin = AccessControlMixinMock(diamond);
-    }
-
-    function _mock()
-        internal
-        view
-        virtual
-        override(AccessControlFacetTest, AccessControlEnumerableFacetTest, AccessControlDefaultAdminRulesFacetTest)
-        returns (address)
-    {
-        return address(accessControlMixin);
     }
 
     function test_supportsInterface()
