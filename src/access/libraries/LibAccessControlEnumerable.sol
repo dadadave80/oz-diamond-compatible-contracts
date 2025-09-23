@@ -20,6 +20,7 @@ library LibAccessControlEnumerable {
     }
 
     function _registerInterface() internal {
+        LibAccessControl._registerInterface();
         LibERC165._registerInterface(type(IAccessControlEnumerable).interfaceId);
     }
 
